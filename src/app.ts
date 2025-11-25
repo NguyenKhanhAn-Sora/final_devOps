@@ -11,6 +11,12 @@ const app = express();
 
 app.use(express.json());
 
+app.get("/", (req, res) => {
+  res.json({
+    message: "Welcome to Express DevOps API",
+  });
+});
+
 app.use("/api/auth", authRoutes);
 app.use("/api/user", userRoutes);
 app.use("/api/admin", adminRoutes);
