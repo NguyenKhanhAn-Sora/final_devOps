@@ -1,0 +1,45 @@
+name: CI - Build and Test
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    services:
+      mongo:
+        image: mongo:6.0
+        ports:
+          - 27017:27017
+        options: >-
+          --health-cmd="mongosh --eval 'db.stats()'"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=5
+
+    env:
+      MONGO_URI: mongodb+srv://nguyenkhanhan1803:180311202@expressdevops.bnw1dgz.mongodb.net/express_devops?appName=expressDevops
+      JWT_SECRET: R2kSUWXmK9rU28EhYxirY0DZ40RTr5ju0ppH7bkCSwXmALwoHh
+      NODE_ENV: test
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build TypeScript
+        run: npm run build
+
+      - name: Run tests
+        run: npm run test
